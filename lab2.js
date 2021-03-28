@@ -1,62 +1,89 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+var app = require('../app');
+var debug = require('debug')('hotwallpaper:server');
 var http = require('http');
-var fs = require('fs');
-var mayTinh = require('./may_tinh');
 
-http.createServer(function (request, response) {
-    response.writeHead(200, {'Content-Type': 'text/html'});
-    var url = request.url;
-    if (url == '/') {
-        fs.readFile('index.html', function (error, data) {
-            if (error == null) {
-                console.log(data);
-                response.write(data);
-                response.end();
-            } else {
-                response.end(error);
-            }
-        });
-    } else if (url == '/login') {
-        response.end("Chao mung den Login");
-    } else if (url == '/insert') {
-        fs.writeFile('test.txt', 'Ghi vao file lan 2', function (error) {
-            if (error == null) {
-                response.end("Ghi thanh cong");
+/**
+ * Get port from environment and store in Express.
+ */
 
-            } else {
-                response.end(error);
-            }
-        });
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
 
-    } else if (url == '/append') {
-        fs.appendFile('test.txt', 'Ghi vao file lan 2', function (error) {
-            if (error == null) {
-                response.end("Ghi thanh cong");
+/**
+ * Create HTTP server.
+ */
 
-            } else {
-                response.end(error);
-            }
-        });
+var server = http.createServer(app);
 
-    } else if (url == '/unlink') {
-        fs.unlink('test.txt', function (error) {
-            if (error == null) {
-                response.end("Xoa thanh cong");
+/**
+ * Listen on provided port, on all network interfaces.
+ */
 
-            } else {
-                response.end(error);
-            }
-        });
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
 
-    } else if (url == '/rename') {
-        fs.rename('test.txt', 'test2.txt', function (error) {
-            if (error == null) {
-                response.end("Rename thanh cong");
+/**
+ * Normalize a port into a number, string, or false.
+ */
 
-            } else {
-                response.end(error);
-            }
-        });
-    } else {
-        response.end("404 not found");
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
     }
-}).listen(8181);
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    var bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    var addr = server.address();
+    var bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    debug('Listening on ' + bind);
+}

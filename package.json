@@ -1,12 +1,20 @@
 {
   "name": "demo_lab2",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node lab2.js"
+    "start": "lab2.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/L15147/package.json.git"
+  },
+  "bugs": {
+    "url": "https://github.com/L15147/package.json/issues"
+  },
+  "homepage": "https://github.com/L15147/package.json#readme",
+  "description": ""
 }
